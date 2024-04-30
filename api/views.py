@@ -1,4 +1,6 @@
 import redis
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,7 +16,10 @@ class PublishView(APIView):
     def post(self, request, *args, **kwargs):
         message = request.data.get("message", "")
         if message:
-            redis_client.publish("notifications", message)
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "notifications", {"type": "notification_message", "message": message}
+            )
             return Response(
                 {"status": "Message sent", "message": message},
                 status=status.HTTP_200_OK,
