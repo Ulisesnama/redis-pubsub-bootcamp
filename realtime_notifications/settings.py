@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     "api",
 ]
 
+REDIS_HOST = "localhost"
+
+REDIS_PORT = 6379
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
